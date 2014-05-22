@@ -114,93 +114,12 @@ void SplashBack::IncreaseSplash ( int i ) {
 		for ( int j = 0 ; j < 4 ; ++j ) {
 
 			Splash s ( i , sceneNode->clone() );
-			int k = i;
-			if ( j == 0 ) {
-
-				while ( k/4 != 0 ) {
-
-					k -= 4;
-					if ( splashDamierVec[k].getLevel() != 0 ) {
-
-						s.setPos ( k );
-						s.getSceneNode()->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , 1000 ) );
-						s.getSceneNode()->setVisible ( true );
-						splashActive.push_back ( s );
-						break;
-					}
-				}
-				if ( s.getPos () == i ) {
-
-					s.getSceneNode()->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , 1000 ) );
-					s.getSceneNode()->addAnimator ( sceneManager->createDeleteAnimator ( 1000 ) );
-					s.getSceneNode()->setVisible ( true );
-				}
-			}
-			if ( j == 1 ) {
-
-				while ( k%4 != 0 ) {
-
-					k -= 1;
-					if ( splashDamierVec[k].getLevel() != 0 ) {
-
-						s.setPos ( k );
-						s.getSceneNode()->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , 1000 ) );
-						s.getSceneNode()->setVisible ( true );
-						splashActive.push_back ( s );
-						break;
-					}
-				}
-				if ( s.getPos () == i ) {
-
-					s.getSceneNode()->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , 1000 ) );
-					s.getSceneNode()->addAnimator ( sceneManager->createDeleteAnimator ( 1000 ) );
-					s.getSceneNode()->setVisible ( true );
-				}
-			}
-			if ( j == 2 ) {
-
-				while ( k/4 != 3 ) {
-
-					k += 4;
-					if ( splashDamierVec[k].getLevel() != 0 ) {
-
-						s.setPos ( k );
-						s.getSceneNode()->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , 1000 ) );
-						s.getSceneNode()->setVisible ( true );
-						splashActive.push_back ( s );
-						break;
-					}
-				}
-				if ( s.getPos () == i ) {
-
-					s.getSceneNode()->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , 1000 ) );
-					s.getSceneNode()->addAnimator ( sceneManager->createDeleteAnimator ( 1000 ) );
-					s.getSceneNode()->setVisible ( true );
-				}
-			}
-			if ( j == 3 ) {
-
-				while ( k%4 != 3 ) {
-		
-					k += 1;
-					if ( splashDamierVec[k].getLevel() != 0 ) {
-
-						s.setPos ( k );
-						s.getSceneNode()->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , 1000 ) );
-						s.getSceneNode()->setVisible ( true );
-						splashActive.push_back ( s );
-						break;
-					}
-				}
-				if ( s.getPos () == i ) {
-
-					s.getSceneNode()->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , 1000 ) );
-					s.getSceneNode()->addAnimator ( sceneManager->createDeleteAnimator ( 1000 ) );
-					s.getSceneNode()->setVisible ( true );
-				}
-			}
-			if ( i == k )
+			s.setDirection ( j );
+			s.Animate(sceneManager);
+			if ( i == s.getPos() )
 				sceneManager->addToDeletionQueue ( s.getSceneNode() );
+			else
+				splashActive.push_back ( s );
 
 			sceneManager->addToDeletionQueue ( sceneNode );
 		}
@@ -216,24 +135,37 @@ void SplashBack::Tick() {
 			sceneNode->setFrameLoop ( 0 , 0 );
 	}
 	std::list<Splash>::iterator it = splashActive.begin();
+	int i = 0;
 	while ( it != splashActive.end() ) {
 
 		bool del = false;
+		bool cont = false;
 		irr::core::list<irr::scene::ISceneNodeAnimator*> AnimList = (*it).getSceneNode()->getAnimators();
 		irr::core::list<irr::scene::ISceneNodeAnimator*>::Iterator it2 = AnimList.begin();
-
 		while ( it2 != AnimList.end() ) {
 
 			if ( (*it2)->hasFinished() ) {
 
 				(*it).getSceneNode()->removeAnimator(*it2);
+
 				if ( (*it).getPos() >= 0 ) {
 
-					sceneManager->addToDeletionQueue ( (*it).getSceneNode() );
-					if ( splashDamierVec[(*it).getPos()].getLevel() > 0 || combo == -1 )
+					if ( splashDamierVec[(*it).getPos()].getLevel() > 0 || combo == -1 ) {
+						sceneManager->addToDeletionQueue ( (*it).getSceneNode() );
 						IncreaseSplash ( (*it).getPos() );
+						del = true;
+					}
+					else if ( (*it).Stuck() ) {
+						sceneManager->addToDeletionQueue ( (*it).getSceneNode() );
+						del = true;
+					}
+					else {
+
+						(*it).Animate(sceneManager);
+					}
 				}
-				del = true;
+				else
+					del=true;
 			}
 			++it2;
 		}
@@ -282,7 +214,7 @@ void SplashBack::Tick() {
 				splashActive.push_back ( s );
 				for ( std::list<Splash>::iterator it = splashMagazine.begin() ; it != splashMagazine.end() ; it++ ) {
 
-				irr::scene::ISceneNodeAnimator* anim = sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( 0 , - ( (*it).getPos() + 1 ) * 10 , 0 ) , irr::core::vector3df ( 0 , - ( (*it).getPos() + 2 ) * 10 , 0 ) , 1000 );
+					irr::scene::ISceneNodeAnimator* anim = sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( 0 , - ( (*it).getPos() + 1 ) * 10 , 0 ) , irr::core::vector3df ( 0 , - ( (*it).getPos() + 2 ) * 10 , 0 ) , 1000 );
 					(*it).getSceneNode()->addAnimator ( anim );
 					(*it).setPos ( (*it).getPos() + 1 );
 					Splash active ( *it );
@@ -296,7 +228,7 @@ void SplashBack::Tick() {
 bool SplashBack::Empty () {
 
 	for ( int i = 0 ; i < 16 ; ++i ) {
-		
+
 		if ( splashDamierVec[i].getLevel() != 0 )
 			return false;
 	}

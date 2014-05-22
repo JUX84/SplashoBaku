@@ -7,6 +7,7 @@ class Splash {
 
 	private:
 	int pos;
+	int dir;
 	irr::scene::ISceneNode* sceneNode;
 
 	public:
@@ -15,6 +16,10 @@ class Splash {
 	irr::scene::ISceneNode* getSceneNode();
 	int getPos();
 	void setPos ( int p );
+	int getDirection();
+	void setDirection (int d );
+	void Animate(irr::scene::ISceneManager* sceneManager);
+	bool Stuck();
 };
 
 #endif
