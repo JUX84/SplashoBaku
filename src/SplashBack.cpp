@@ -179,11 +179,12 @@ void SplashBack::Tick() { // Fonction lancée à chaque tick
 			irr::scene::ISceneNode* sceneNode = sceneManager->addMeshSceneNode ( splashMesh ); // On crée une boule
 			sceneNode->setMaterialTexture ( 0 , videoDriver->getTexture ( "resources/textures/fabric.jpg" ) ); // On lui donne une texture
 			sceneNode->setMaterialFlag ( irr::video::EMF_LIGHTING , true ); // On active la lumière
+			sceneNode->setScale ( irr::core::vector3df ( 0.2 , 0.2 , 0.2 ) ); // On rétrécit la boule
 			sceneNode->setID ( 0x0 ); // On lui donne l'ID 0
 
 			for ( int i = 0 ; i < combo ; ++i ) { // Pour chaque combo
 
-				sceneNode->setPosition ( irr::core::vector3df ( 0 , splashMagazine.size()*25 , -100 ) ); // On déplace la boule
+				sceneNode->setPosition ( irr::core::vector3df ( 0 , splashMagazine.size()*10 , 0 ) ); // On déplace la boule
 				splashMagazine.push_back ( Splash ( -(splashMagazine.size()+1) , sceneNode->clone() ) ); // On l'ajoute au chargeur
 			}
 
@@ -204,13 +205,13 @@ void SplashBack::Tick() { // Fonction lancée à chaque tick
 				int i = atoi ( currentNode->getName() ); // On récupère le nom du noeud sélectionné (un des damiers)
 				Splash s = splashMagazine.front(); // On prend la première boule du chargeur
 				splashMagazine.pop_front(); // On la pop
-				irr::scene::ISceneNodeAnimator* anim = sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( 0 , 0 , 0 ) , irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , 1000 ); // On crée une animation qui va partir du centre de l'écran (là où il y a la première boule du chargeur) qui va aller vers là où on a cliqué
+				irr::scene::ISceneNodeAnimator* anim = sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( 0 , 0 , 0 ) , irr::core::vector3df ( -45 + i%4 * 30 , 45 - i/4 * 30 , 5 ) , 500 ); // On crée une animation qui va partir du centre de l'écran (là où il y a la première boule du chargeur) qui va aller vers là où on a cliqué
 				s.getSceneNode()->addAnimator ( anim ); // On attribue cette animation à la boule du chargeur
 				s.setPos ( i ); // On change sa position
 				splashActive.push_back ( s ); // On l'ajoute aux boules actives
 				for ( std::list<Splash>::iterator it = splashMagazine.begin() ; it != splashMagazine.end() ; it++ ) { // Pour chaque boule du chargeur
 
-					irr::scene::ISceneNodeAnimator* anim = sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( 0 , - ( (*it).getPos() + 1 ) * 10 , 0 ) , irr::core::vector3df ( 0 , - ( (*it).getPos() + 2 ) * 10 , 0 ) , 1000 ); // On crée l'animation qui va les replacer
+					irr::scene::ISceneNodeAnimator* anim = sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( 0 , - ( (*it).getPos() + 1 ) * 10 , 0 ) , irr::core::vector3df ( 0 , - ( (*it).getPos() + 2 ) * 10 , 0 ) , 500 ); // On crée l'animation qui va les replacer
 					(*it).getSceneNode()->addAnimator ( anim ); // On leur ajoute l'animation
 					(*it).setPos ( (*it).getPos() + 1 ); // On change leur position
 					Splash active ( *it ); // On crée un pointeur sur la boule

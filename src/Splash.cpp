@@ -56,7 +56,7 @@ void Splash::Animate ( irr::scene::ISceneManager* sceneManager ) { // Anime la b
 	}
 	if ( k != pos ) { // Si on a bougé
 
-		sceneNode->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + pos%4 * 30 , 45 - pos/4 * 30 , 5 ) , irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , 1000 ) ); // On lance l'animation
+		sceneNode->addAnimator ( sceneManager->createFlyStraightAnimator ( irr::core::vector3df ( -45 + k%4 * 30 , 45 - k/4 * 30 , 5 ) , irr::core::vector3df ( -45 + pos%4 * 30 , 45 - pos/4 * 30 , 5 ) , 500 ) ); // On lance l'animation
 		sceneNode->setVisible ( true ); // On rend la boule visible
 	}
 }
