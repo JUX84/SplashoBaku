@@ -1,20 +1,18 @@
 #include <irrlicht.h>
 
-using namespace irr;
+struct SMouseState { // Structure stockant l'état de la souris
 
-struct SMouseState {
-
-	core::position2di Position;
-	bool LeftButtonDown;
-	SMouseState() : LeftButtonDown(false) {}
+	irr::core::position2di Position; // Position du curseur
+	bool LeftButtonDown; // Booleen pour le clic gauche
+	SMouseState() : LeftButtonDown(false) {} // Constructeur
 };
 
-class MouseEventReceiver : public IEventReceiver {
+class MouseEventReceiver : public irr::IEventReceiver { // Classe qui reçoit les infos de la souris
 
 	public:
-		SMouseState MouseState;
+		SMouseState MouseState; // Etat de la souris
 
-		virtual bool OnEvent ( const SEvent& event );
-		const SMouseState& GetMouseState() const;
-		MouseEventReceiver();
+		virtual bool OnEvent ( const irr::SEvent& event ); // Appel en cas de mouvement ou de clic
+		const SMouseState& GetMouseState() const; // Récupération de l'état de la souris
+		MouseEventReceiver(); // Constructeur
 };
